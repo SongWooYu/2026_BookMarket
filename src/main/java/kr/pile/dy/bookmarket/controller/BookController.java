@@ -5,9 +5,7 @@ import kr.pile.dy.bookmarket.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -25,6 +23,22 @@ public class BookController {
         model.addAttribute("bookList", listOfBooks);
         return "books";
     }
+
+    @GetMapping("/book")
+    public String requestBookById(@RequestParam("id") String bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        return "book";
+    }
+
+    @GetMapping("/{category}")
+    public String requestBookByCategory(@PathVariable("category") String bookCategory, Model model) {
+        List<Book> booksByCategory = bookService.getBookListByCategory(bookCategory);
+        model.addAttribute("bookList", booksByCategory);
+        return "books";
+    }
+
+
     @GetMapping("/all")
     public ModelAndView requestAllBooks() {
         ModelAndView modelAndView = new ModelAndView();

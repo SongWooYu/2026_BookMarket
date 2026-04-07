@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Array;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository{
@@ -41,7 +40,7 @@ public class BookRepositoryImpl implements BookRepository{
         book3.setName("박태웅의 AI 강의 2026 ");
         book3.setDescription("챗GPT 등장 이후 AI는 운영체제이자 파트너, 그리고 휴머노이드로 확장되며 삶과 산업 전반을 빠르게 바꾸고 있다. 독자들이 ‘인공지능 분야 최고의 책’으로 꼽은 『박태웅의 AI 강의』 시리즈가 최신 흐름을 반영한 『박태웅의 AI 강의 2026』으로 돌아왔다.");
         book3.setPublisher("한빛 비즈");
-        book3.setCategory("컴퓨터/모바일");
+        book3.setCategory("IT 교육교재");
         book3.setAuthor("박태웅");
         book3.setUnitPrice(new BigDecimal(20700));
         book3.setReleaseDate("2026/03/20");
@@ -51,9 +50,62 @@ public class BookRepositoryImpl implements BookRepository{
         listOfBooks.add(book3);
     }
 
-
     @Override
     public List<Book> getAllBookList() {
         return listOfBooks;
+    }
+
+    @Override
+    public Book getBookById(String bookId) {
+        Book book = null;
+        for (Book searchBook : listOfBooks) {
+            if (searchBook != null && searchBook.getBookId() != null && searchBook.getBookId().equals(bookId)) {
+                book = searchBook;
+                break;
+            }
+        }
+
+        if (book == null) {
+            throw new IllegalArgumentException("도서 ID가 " + bookId + "인 도서는 찾을 수가 없습니다.");
+        }
+
+        return book;
+    }
+
+    @Override
+    public List<Book> getBookListByCategory(String category) {
+        List<Book> booksByCategory = new ArrayList<Book>();
+        for(Book searchBook : listOfBooks) {
+            if (category.equalsIgnoreCase(searchBook.getCategory())) {
+                booksByCategory.add(searchBook);
+            }
+        }
+        return booksByCategory;
+    }
+
+    @Override
+    public Set<Book> getBookListByFilter(Map<String, List<String>> filter) {
+        Set<Book> booksByCategory = new HashSet<Book>();
+        Set<Book> booksByPublisher = new HashSet<Book>();
+        Set<String> booksByFilter = filter.keySet();
+
+        if (booksByFilter.contains("publisher")) {
+            for (String publisherName : filter.get("publisher")) {
+                for (Book searchBook : listOfBooks) {
+                    if (publisherName.equalsIgnoreCase(searchBook.getPublisher())) {
+                        booksByPublisher.add(searchBook);
+                    }
+                }
+            }
+        }
+        if (booksByFilter.contains("category")) {
+            for (String category : filter.get("category")) {
+                List<Book> list = getBookListByCategory(category);
+                booksByCategory.addAll(list);
+            }
+        }
+        booksByCategory.retainAll(booksByPublisher);
+
+        return booksByCategory;
     }
 }
