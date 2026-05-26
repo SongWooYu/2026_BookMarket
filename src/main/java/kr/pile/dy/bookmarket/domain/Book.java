@@ -1,19 +1,20 @@
 package kr.pile.dy.bookmarket.domain;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
 @Data
-@Setter
-@Getter
-
 public class Book {
+    @Pattern(regexp = "isbn[1-9]+")
     private String bookId;          // 도서 ID
+    @Size(min = 4, max = 50)
     private String name;            // 도서 제목
+    @Min(value = 0)
+    @Digits(integer = 8, fraction = 2)
+    @NotNull
     private BigDecimal unitPrice;   // 가격
     private String author;          // 저자
     private String description;     // 설명
