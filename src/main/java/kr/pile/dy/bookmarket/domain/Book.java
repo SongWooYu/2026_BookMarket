@@ -1,6 +1,7 @@
 package kr.pile.dy.bookmarket.domain;
 
 import jakarta.validation.constraints.*;
+import kr.pile.dy.bookmarket.validator.BookId;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 
 @Data
 public class Book {
+    @BookId
     @Pattern(regexp = "isbn[1-9]+")
     private String bookId;          // 도서 ID
     @Size(min = 4, max = 50)
