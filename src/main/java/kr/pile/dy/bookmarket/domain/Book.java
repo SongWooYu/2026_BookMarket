@@ -10,7 +10,8 @@ import java.math.BigDecimal;
 @Data
 public class Book {
     @BookId
-    @Pattern(regexp = "isbn[1-9]+", message = "{Pattern.book.bookId}")
+    @Pattern(regexp = "isbn[0-9]+", message = "{Pattern.book.bookId}")
+    //@Pattern(regexp = "isbn[0-9]+", message = "{Pattern.book.bookId}")
     private String bookId;          // 도서 ID
     @Size(min = 4, max = 50, message = "{Size.book.name}")
     private String name;            // 도서 제목
